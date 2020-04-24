@@ -1,5 +1,6 @@
 import express from 'express'
 import { Application } from 'express'
+import { ControllerBase } from './interfaces/controllerBase'
 
 /**
  * From: https://dev.to/aligoren/developing-an-express-application-using-typescript-3b1
@@ -8,20 +9,20 @@ class App {
     public app: Application
     public port: number
 
-    constructor(init: { port: number; middleWares: any; controllers: any; }) {
+    constructor(init: { port: number; middleWares: any[]; controllers: ControllerBase[]; }) {
         this.app = express()
         this.port = init.port
         this.middlewares(init.middleWares);
         this.routes(init.controllers);
     }
 
-    private middlewares(middleWares: { forEach: (arg0: (middleWare: any) => void) => void; }) {
+    private middlewares(middleWares: any[]) {
         middleWares.forEach(middleWare => {
             this.app.use(middleWare)
         })
     }
 
-    private routes(controllers: { forEach: (arg0: (controller: any) => void) => void; }) {
+    private routes(controllers: ControllerBase[]) {
         controllers.forEach(controller => {
             this.app.use('/', controller.router)
         })
