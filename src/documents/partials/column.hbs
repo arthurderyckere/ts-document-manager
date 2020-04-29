@@ -1,0 +1,70 @@
+{{#ifCond size '==' '10'}}
+<!--[if (mso)|(IE)]><td align="center" width="66" style="width:66px;padding:0px;" ><![endif]-->
+<div class="col col-10">
+    {{/ifCond}}
+    {{#ifCond size '==' '20'}}
+    <!--[if (mso)|(IE)]><td align="center" width="132" style="width:132px;padding:0px;" ><![endif]-->
+    <div class="col col-20">
+        {{/ifCond}}
+        {{#ifCond size '==' '25'}}
+        <!--[if (mso)|(IE)]><td align="center" width="165" style="width:165px;padding:0px;" ><![endif]-->
+        <div class="col col-25">
+            {{/ifCond}}
+            {{#ifCond size '==' '30'}}
+            <!--[if (mso)|(IE)]><td align="center" width="198" style="width:198px;padding:0px;" ><![endif]-->
+            <div class="col col-30">
+                {{/ifCond}}
+                {{#ifCond size '==' '33'}}
+                <!--[if (mso)|(IE)]><td align="center" width="220" style="width:220px;padding:0px;" ><![endif]-->
+                <div class="col col-33">
+                    {{/ifCond}}
+                    {{#ifCond size '==' '40'}}
+                    <!--[if (mso)|(IE)]><td align="center" width="264" style="width:264px;padding:0px;" ><![endif]-->
+                    <div class="col col-40">
+                        {{/ifCond}}
+                        {{#ifCond size '==' '50'}}
+                        <!--[if (mso)|(IE)]><td align="center" width="330" style="width:330px;padding:0px;" ><![endif]-->
+                        <div class="col col-50">
+                            {{/ifCond}}
+                            {{#ifCond size '==' '60'}}
+                            <!--[if (mso)|(IE)]><td align="center" width="396" style="width:396px;padding:0px;" ><![endif]-->
+                            <div class="col col-60">
+                                {{/ifCond}}
+                                {{#ifCond size '==' '65'}}
+                                <!--[if (mso)|(IE)]><td align="center" width="429" style="width:429px;padding:0px;" ><![endif]-->
+                                <div class="col col-65">
+                                    {{/ifCond}}
+                                    {{#ifCond size '==' '67'}}
+                                    <!--[if (mso)|(IE)]><td align="center" width="440" style="width:440px;padding:0px;" ><![endif]-->
+                                    <div class="col col-67">
+                                        {{/ifCond}}
+                                        {{#ifCond size '==' '75'}}
+                                        <!--[if (mso)|(IE)]><td align="center" width="495" style="width:495px;padding:0px;" ><![endif]-->
+                                        <div class="col col-75">
+                                            {{/ifCond}}
+                                            {{#ifCond size '==' '80'}}
+                                            <!--[if (mso)|(IE)]><td align="center" width="528" style="width:528px;padding:0px;" ><![endif]-->
+                                            <div class="col col-80">
+                                                {{/ifCond}}
+                                                {{#ifCond size '==' '100'}}
+                                                <!--[if (mso)|(IE)]><td align="center" width="660" style="width:660px;padding:0px;" ><![endif]-->
+                                                <div class="col col-100">
+                                                    {{/ifCond}}
+                                                    <div style="width: 100% !important;">
+                                                        {{#if bgcolor}}
+                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                                            bgcolor="{{bgcolor}}">
+                                                            {{/if}}
+                                                            {{#unless bgcolor}}
+                                                            <table width="100%" cellpadding="0" cellspacing="0"
+                                                                border="0" bgcolor="#ffffff">
+                                                                {{/unless}}
+                                                                <tr>
+                                                                    <td style="{{style}}">
+                                                                        {{> @partial-block }}
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                    </div>
+                                                </div>
+                                                <!--[if (mso)|(IE)]></td><![endif]-->

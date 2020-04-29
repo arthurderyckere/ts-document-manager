@@ -10,8 +10,8 @@ class App {
     public port: number
 
     constructor(init: { port: number; middleWares: any[]; controllers: ControllerBase[]; }) {
-        this.app = express()
-        this.port = init.port
+        this.app = express();
+        this.port = init.port;
         this.middlewares(init.middleWares);
         this.routes(init.controllers);
     }
@@ -29,6 +29,8 @@ class App {
     }
 
     public listen() {
+        // https: https://timonweb.com/posts/running-expressjs-server-over-https/
+        this.app.disable('x-powered-by');
         this.app.listen(this.port, () => {
             console.log(`App listening on the http://localhost:${this.port}`)
         })

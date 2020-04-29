@@ -13,5 +13,4 @@ const app = new App({
         bodyParser.urlencoded({ extended: true }),
         apiLogger]
 });
-
 app.listen();

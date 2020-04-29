@@ -1,74 +1,68 @@
 import Handlebars from "handlebars";
-import { readFile, writeFile } from "fs";
+import { promises } from "fs";
+import { basename, extname } from "path";
 import { LocalLoggerInstance } from "../logging/local";
 
 class DocumentManager {
     private static instance: DocumentManager;
-    private readonly inputfolder = "./demos/";
-    private readonly outputFolder = "./demos/output/";
-    private readonly extension = ".html";
 
     public static getInstance(): DocumentManager {
         if (!DocumentManager.instance)
             DocumentManager.instance = new DocumentManager();
-
         return DocumentManager.instance;
     }
-    public execute(sourceId: string, data: object): Promise<NodeJS.ErrnoException | undefined> {
-        return new Promise((resolve, reject) => {
-            readFile(this.inputfolder + sourceId + this.extension, (error: NodeJS.ErrnoException | null, htmlData: Buffer) => {
-                if (error) {
-                    LocalLoggerInstance.handleError(error);
-                    reject(error);
-                }
-                else if (htmlData) {
-                    let result = this.transformDocument(htmlData, data);
-                    this.handleOutput(sourceId, result).then(() => {
-                        resolve();
-                    }).catch((error) => {
-                        reject(error);
-                    });
-                }
-            });
-        });
-    }
-    /**
-     * Doesn't handle non existing folders for now
-     */
-    private handleOutput(sourceId: string, result: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            writeFile(this.outputFolder + sourceId + this.extension, result, (error: NodeJS.ErrnoException | null) => {
-                if (!error) {
-                    resolve();
-                }
-                else {
-                    LocalLoggerInstance.handleError(error);
-                    reject(error)
-                }
-            });
-        });
-    }
-    private transformDocument(document: Buffer, data: object): string {
+    public async generateResponsiveMail(sourceId: string, data: object): Promise<string | undefined> {
         try {
-            let source = document.toString();
-            let template = this.compile(source);
-            if (template) {
-                return template(data);
-            }
-            throw new Error("Invalid operation: template is null or undefined.")
-        } catch (error) {
-            LocalLoggerInstance.handleError(error);
-            throw error;
-        }
-    }
-    private compile(template: string): HandlebarsTemplateDelegate | undefined {
-        try {
-            return Handlebars.compile(template);
+            let page = await promises.readFile("./src/documents/emails/" + sourceId + "/" + sourceId + ".html");
+            let layout = await this.loadLayoutFile();
+            await this.registerPartials();
+            await this.registerHelpers();
+            Handlebars.registerPartial("body", page.toString());
+            let layoutTemplate = Handlebars.compile(layout);
+            let layoutResult = layoutTemplate(data);
+            return layoutResult;
         }
         catch (error) {
             LocalLoggerInstance.handleError(error);
             return undefined;
         }
+    }
+
+    public async registerHelpers() {
+        let basePath = "src/documents/helpers";
+        var directory = await promises.readdir(basePath);
+        if (directory && directory.length > 0) {
+            await Promise.all(directory.map(async (filePath) => {
+                let extension = extname(filePath);
+                let name = basename(filePath, extension);
+                if (Handlebars.helpers[name]) {
+                    delete require.cache[require.resolve("../documents/helpers/" + name)];
+                    Handlebars.unregisterHelper(name);
+                }
+                // require path is relative to current file
+                let helper = await require("../documents/helpers/" + name);
+                Handlebars.registerHelper(name, helper);
+            }));
+        }
+    }
+    /**
+     * try catch 
+     */
+    public async registerPartials() {
+        let basePath = "./src/documents/partials";
+        var directory = await promises.readdir(basePath);
+        if (directory && directory.length > 0) {
+            await Promise.all(directory.map(async (filePath) => {
+                let file = await promises.readFile(basePath + "/" + filePath);
+                let extension = extname(filePath);
+                let name = basename(filePath, extension);
+                Handlebars.registerPartial(name, file.toString());
+            }));
+        }
+    }
+    public async loadLayoutFile(): Promise<string> {
+        let result = await promises.readFile("./src/documents/layout/default.hbs");
+        return result.toString();
     }
 }
 
