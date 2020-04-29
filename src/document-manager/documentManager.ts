@@ -45,9 +45,7 @@ class DocumentManager {
             }));
         }
     }
-    /**
-     * try catch 
-     */
+
     public async registerPartials() {
         let basePath = "./src/documents/partials";
         var directory = await promises.readdir(basePath);
